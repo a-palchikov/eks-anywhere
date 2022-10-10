@@ -39,7 +39,7 @@ var supportbundleCmd = &cobra.Command{
 			return err
 		}
 		if err := csbo.createBundle(cmd.Context(), csbo.since, csbo.sinceTime, csbo.bundleConfig); err != nil {
-			return fmt.Errorf("failed to create support bundle: %v", err)
+			return fmt.Errorf("failed to create support bundle: %w", err)
 		}
 		return nil
 	},

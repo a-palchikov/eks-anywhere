@@ -33,15 +33,15 @@ var generateBundleConfigCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		err := gsbo.validateCmdInput()
 		if err != nil {
-			return fmt.Errorf("command input validation failed: %v", err)
+			return fmt.Errorf("command input validation failed: %w", err)
 		}
 		bundle, err := gsbo.generateBundleConfig(cmd.Context())
 		if err != nil {
-			return fmt.Errorf("failed to generate bunlde config: %v", err)
+			return fmt.Errorf("failed to generate bunlde config: %w", err)
 		}
 		err = bundle.PrintBundleConfig()
 		if err != nil {
-			return fmt.Errorf("failed to print bundle config: %v", err)
+			return fmt.Errorf("failed to print bundle config: %w", err)
 		}
 		return nil
 	},
@@ -56,7 +56,7 @@ func preRunGenerateBundleConfigCmd(cmd *cobra.Command, args []string) error {
 	cmd.Flags().VisitAll(func(flag *pflag.Flag) {
 		err := viper.BindPFlag(flag.Name, flag)
 		if err != nil {
-			log.Fatalf("Error initializing flags: %v", err)
+			log.Fatalf("Error initializing flags: %w", err)
 		}
 	})
 	return nil
@@ -71,7 +71,7 @@ func (gsbo *generateSupportBundleOptions) validateCmdInput() error {
 		}
 		_, err := v1alpha1.GetAndValidateClusterConfig(f)
 		if err != nil {
-			return fmt.Errorf("unable to get cluster config from file: %v", err)
+			return fmt.Errorf("unable to get cluster config from file: %w", err)
 		}
 	}
 	return nil
@@ -89,7 +89,7 @@ func (gsbo *generateSupportBundleOptions) generateBundleConfig(ctx context.Conte
 
 	clusterSpec, err := readAndValidateClusterSpec(f, version.Get())
 	if err != nil {
-		return nil, fmt.Errorf("unable to get cluster config from file: %v", err)
+		return nil, fmt.Errorf("unable to get cluster config from file: %w", err)
 	}
 
 	deps, err := dependencies.ForSpec(ctx, clusterSpec).

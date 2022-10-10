@@ -18,7 +18,7 @@ type OptionsRetriever interface {
 }
 
 // Bootstrapper creates and destroys bootstrap clusters. It is satisfied by the bootstrap package
-// and exists predominently for testability.
+// and exists predominantly for testability.
 type Bootstrapper interface {
 	// CreateCluster creates a new local cluster. It does not contain any EKS-A components.
 	CreateBootstrapCluster(
@@ -36,7 +36,7 @@ type Bootstrapper interface {
 	) error
 }
 
-// CreateClusters creates a functional Kubernetes cluster that can be used to faciliate
+// CreateClusters creates a functional Kubernetes cluster that can be used to facilitate
 // EKS-A operations. The bootstrap cluster is populated in the context using
 // workflow.WithBootstrapCluster for subsequent tasks.
 type CreateCluster struct {

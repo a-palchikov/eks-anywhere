@@ -8,8 +8,8 @@ func newLocalExecutableBuilder() localExecutableBuilder {
 	return localExecutableBuilder{}
 }
 
-func (b localExecutableBuilder) Build(binaryPath string) Executable {
-	return NewExecutable(binaryPath)
+func (b localExecutableBuilder) Build(args ...string) Executable {
+	return NewExecutable(args...)
 }
 
 func (b localExecutableBuilder) Init(_ context.Context) (Closer, error) {

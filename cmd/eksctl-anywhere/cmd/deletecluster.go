@@ -34,7 +34,7 @@ var deleteClusterCmd = &cobra.Command{
 			return err
 		}
 		if err := dc.deleteCluster(cmd.Context()); err != nil {
-			return fmt.Errorf("failed to delete cluster: %v", err)
+			return fmt.Errorf("failed to delete cluster: %w", err)
 		}
 		return nil
 	},
@@ -77,7 +77,7 @@ func (dc *deleteClusterOptions) validate(ctx context.Context, args []string) err
 func (dc *deleteClusterOptions) deleteCluster(ctx context.Context) error {
 	clusterSpec, err := newClusterSpec(dc.clusterOptions)
 	if err != nil {
-		return fmt.Errorf("unable to get cluster config from file: %v", err)
+		return fmt.Errorf("unable to get cluster config from file: %w", err)
 	}
 
 	cliConfig := buildCliConfig(clusterSpec)

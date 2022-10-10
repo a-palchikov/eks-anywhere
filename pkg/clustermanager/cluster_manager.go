@@ -820,13 +820,13 @@ func (c *ClusterManager) waitForAllControlPlanes(ctx context.Context, cluster *t
 func (c *ClusterManager) waitForAllClustersReady(ctx context.Context, cluster *types.Cluster, waitStr string) error {
 	clusters, err := c.clusterClient.GetClusters(ctx, cluster)
 	if err != nil {
-		return fmt.Errorf("getting clusters: %v", err)
+		return fmt.Errorf("getting clusters: %w", err)
 	}
 
 	for _, clu := range clusters {
 		err = c.clusterClient.WaitForClusterReady(ctx, cluster, waitStr, clu.Metadata.Name)
 		if err != nil {
-			return fmt.Errorf("waiting for cluster %s to be ready: %v", clu.Metadata.Name, err)
+			return fmt.Errorf("waiting for cluster %s to be ready: %w", clu.Metadata.Name, err)
 		}
 	}
 

@@ -97,14 +97,14 @@ func newClusterSpec(options clusterOptions) (*cluster.Spec, error) {
 	if options.managementKubeconfig != "" {
 		managementCluster, err := cluster.LoadManagement(options.managementKubeconfig)
 		if err != nil {
-			return nil, fmt.Errorf("unable to get management cluster from kubeconfig: %v", err)
+			return nil, fmt.Errorf("unable to get management cluster from kubeconfig: %w", err)
 		}
 		specOpts = append(specOpts, cluster.WithManagementCluster(managementCluster))
 	}
 
 	clusterSpec, err := readAndValidateClusterSpec(options.fileName, version.Get(), specOpts...)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get cluster config from file: %v", err)
+		return nil, fmt.Errorf("unable to get cluster config from file: %w", err)
 	}
 
 	return clusterSpec, nil
@@ -169,7 +169,7 @@ func (c *clusterOptions) cloudStackDirectoriesToMount() ([]string, error) {
 		mountDirs := strings.Split(env, ",")
 		for _, dir := range mountDirs {
 			if _, err := os.Stat(dir); err != nil {
-				return nil, fmt.Errorf("invalid host path to mount: %v", err)
+				return nil, fmt.Errorf("invalid host path to mount: %w", err)
 			}
 			dirs = append(dirs, dir)
 		}

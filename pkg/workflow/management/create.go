@@ -22,12 +22,12 @@ type CreateClusterHookRegistrar interface {
 	RegisterCreateManagementClusterHooks(workflow.HookBinder)
 }
 
-// CreateCluster defines the configuration for a managment cluster creation workflow.
+// CreateCluster defines the configuration for a management cluster creation workflow.
 // It executes tasks in the following order:
 //  1. CreateBootstrapCluster
 //  2. DeleteBootstrapCluster
 type CreateCluster struct {
-	// The spec used to construcft all other dependencies.
+	// The spec used to construct all other dependencies.
 	Spec *cluster.Spec
 
 	// CreateBootstrapOptions supplies bootstrap cluster options for creating bootstrap clusters.

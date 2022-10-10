@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	eksdv1 "github.com/aws/eks-distro-build-tooling/release/api/v1alpha1"
+	"github.com/pkg/errors"
 
 	"github.com/aws/eks-anywhere/pkg/manifests/bundles"
 	"github.com/aws/eks-anywhere/pkg/manifests/releases"
@@ -48,7 +49,7 @@ func (r *Reader) ReadBundlesForVersion(version string) (*releasev1.Bundles, erro
 
 	release, err := releases.ReleaseForVersion(rls, version)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "reading release version %q", version)
 	}
 	if release == nil {
 		return nil, fmt.Errorf("invalid version %s, no matching release found", version)

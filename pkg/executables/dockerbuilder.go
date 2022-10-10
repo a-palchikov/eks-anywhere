@@ -18,8 +18,8 @@ type dockerExecutableBuilder struct {
 	container DockerContainer
 }
 
-func (d *dockerExecutableBuilder) Build(binaryName string) Executable {
-	return NewDockerExecutable(binaryName, d.container.ContainerName())
+func (d *dockerExecutableBuilder) Build(cmd ...string) Executable {
+	return NewDockerExecutable(cmd, d.container.ContainerName())
 }
 
 func (b *dockerExecutableBuilder) Init(ctx context.Context) (Closer, error) {

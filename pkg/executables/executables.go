@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -36,7 +37,7 @@ var redactedEnvKeys = []string{
 }
 
 type executable struct {
-	cli string
+	cmd []string
 }
 
 type Executable interface {
@@ -48,9 +49,9 @@ type Executable interface {
 }
 
 // this should only be called through the executables.builder
-func NewExecutable(cli string) Executable {
+func NewExecutable(cmd ...string) Executable {
 	return &executable{
-		cli: cli,
+		cmd: cmd,
 	}
 }
 
@@ -71,10 +72,12 @@ func (e *executable) Command(ctx context.Context, args ...string) *Command {
 }
 
 func (e *executable) Run(cmd *Command) (stdout bytes.Buffer, err error) {
+	logger.Info("Run command with environ", "cmd", e.cmd, "args", cmd.args, "environ", cmd.envVars)
 	for k, v := range cmd.envVars {
 		os.Setenv(k, v)
 	}
-	return execute(cmd.ctx, e.cli, cmd.stdIn, cmd.envVars, cmd.args...)
+	args := append(e.cmd[1:], cmd.args...)
+	return execute(cmd.ctx, e.cmd[0], cmd.stdIn, cmd.envVars, args)
 }
 
 func (e *executable) Close(ctx context.Context) error {
@@ -95,14 +98,14 @@ func RedactCreds(cmd string, envMap map[string]string) string {
 	return cmd
 }
 
-func execute(ctx context.Context, cli string, in []byte, envVars map[string]string, args ...string) (stdout bytes.Buffer, err error) {
+func execute(ctx context.Context, cli string, in []byte, envVars map[string]string, args []string) (stdout bytes.Buffer, err error) {
 	var stderr bytes.Buffer
 	cmd := exec.CommandContext(ctx, cli, args...)
-	logger.V(6).Info("Executing command", "cmd", RedactCreds(cmd.String(), envVars))
+	logger.V(1).Info("Executing command", "cmd", RedactCreds(cmd.String(), envVars))
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	if len(in) != 0 {
-		cmd.Stdin = bytes.NewReader(in)
+		cmd.Stdin = io.TeeReader(bytes.NewReader(in), &dumpingWriter{})
 	}
 
 	err = cmd.Run()
@@ -125,4 +128,16 @@ func execute(ctx context.Context, cli string, in []byte, envVars map[string]stri
 		logger.V(8).Info(cli, "stderr", stderr.String())
 	}
 	return stdout, nil
+}
+
+func (r *dumpingWriter) Write(p []byte) (n int, err error) {
+	if !r.wroteHeader {
+		fmt.Println("[[[start of stdin dump]]]")
+		r.wroteHeader = true
+	}
+	return os.Stdout.Write(p)
+}
+
+type dumpingWriter struct {
+	wroteHeader bool
 }

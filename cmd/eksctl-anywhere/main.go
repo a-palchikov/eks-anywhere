@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -26,8 +27,9 @@ func main() {
 			os.Exit(-1)
 		}
 	}
-	if cmd.Execute() == nil {
-		os.Exit(0)
+	if err := cmd.Execute(); err != nil {
+		fmt.Fprintf(os.Stderr, "[!]Error: %+v\n", errors.Unwrap(err))
+		os.Exit(-1)
 	}
-	os.Exit(-1)
+	os.Exit(0)
 }

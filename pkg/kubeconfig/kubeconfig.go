@@ -19,7 +19,7 @@ const FromClusterFormat = "%s-eks-a-cluster.kubeconfig"
 // https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#set-the-kubeconfig-environment-variable
 const EnvName = "KUBECONFIG"
 
-// FromClusterName formats an expected Kubeconfig path for EKS-A clusters. This includes a subdirecftory
+// FromClusterName formats an expected Kubeconfig path for EKS-A clusters. This includes a subdirectory
 // named after the cluster name. For example, if the clusterName is 'sandbox' the generated path would be
 // sandbox/sandbox-eks-a-cluster.kubeconfig
 func FromClusterName(clusterName string) string {

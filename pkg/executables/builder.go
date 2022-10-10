@@ -15,7 +15,7 @@ const defaultEksaImage = "public.ecr.aws/l0g8r8j6/eks-anywhere-cli-tools:v0.7.2-
 
 type ExecutableBuilder interface {
 	Init(ctx context.Context) (Closer, error)
-	Build(binaryPath string) Executable
+	Build(cmd ...string) Executable
 }
 
 type ExecutablesBuilder struct {
@@ -29,6 +29,7 @@ func NewExecutablesBuilder(executableBuilder ExecutableBuilder) *ExecutablesBuil
 }
 
 func (b *ExecutablesBuilder) BuildKindExecutable(writer filewriter.FileWriter) *Kind {
+	// return NewKind(b.executableBuilder.Build(kindPath, "--verbosity", "10"), writer)
 	return NewKind(b.executableBuilder.Build(kindPath), writer)
 }
 
@@ -77,13 +78,13 @@ func (b *ExecutablesBuilder) Init(ctx context.Context) (Closer, error) {
 
 func BuildSonobuoyExecutable() *Sonobuoy {
 	return NewSonobuoy(&executable{
-		cli: sonobuoyPath,
+		cmd: []string{sonobuoyPath},
 	})
 }
 
 func BuildDockerExecutable() *Docker {
 	return NewDocker(&executable{
-		cli: dockerPath,
+		cmd: []string{dockerPath},
 	})
 }
 
