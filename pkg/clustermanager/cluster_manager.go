@@ -242,7 +242,7 @@ func (c *ClusterManager) writeCAPISpecFile(clusterName string, content []byte) e
 }
 
 // CreateWorkloadCluster creates a workload cluster in the provider that the customer has specified.
-// It applied the kubernetes manifest file on the management cluster, waits for the control plane to be ready,
+// It applies the kubernetes manifest file on the management cluster, waits for the control plane to be ready,
 // and then generates the kubeconfig for the cluster.
 // It returns a struct of type Cluster containing the name and the kubeconfig of the cluster.
 func (c *ClusterManager) CreateWorkloadCluster(ctx context.Context, managementCluster *types.Cluster, clusterSpec *cluster.Spec, provider providers.Provider) (*types.Cluster, error) {

@@ -72,7 +72,6 @@ func (e *executable) Command(ctx context.Context, args ...string) *Command {
 }
 
 func (e *executable) Run(cmd *Command) (stdout bytes.Buffer, err error) {
-	logger.Info("Run command with environ", "cmd", e.cmd, "args", cmd.args, "environ", cmd.envVars)
 	for k, v := range cmd.envVars {
 		os.Setenv(k, v)
 	}
@@ -102,8 +101,8 @@ func execute(ctx context.Context, cli string, in []byte, envVars map[string]stri
 	var stderr bytes.Buffer
 	cmd := exec.CommandContext(ctx, cli, args...)
 	logger.V(1).Info("Executing command", "cmd", RedactCreds(cmd.String(), envVars))
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
+	cmd.Stdout = io.MultiWriter(&stdout, os.Stdout)
+	cmd.Stderr = io.MultiWriter(&stderr, os.Stderr)
 	if len(in) != 0 {
 		cmd.Stdin = io.TeeReader(bytes.NewReader(in), &dumpingWriter{})
 	}

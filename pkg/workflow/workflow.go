@@ -7,7 +7,7 @@ import (
 // Config is the configuration for constructing a Workflow instance.
 type Config struct {
 	// ErrorHandler is handler called when a workflow experiences an error. The error may originate
-	// from hook or from a task. The original error is alwasy returned from the workflow's Execute.
+	// from hook or from a task. The original error is always returned from the workflow's Execute.
 	// Optional. Defaults to a no-op handler.
 	ErrorHandler ErrorHandler
 }

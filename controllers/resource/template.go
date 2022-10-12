@@ -388,7 +388,7 @@ func (r *DockerTemplate) TemplateResources(ctx context.Context, eksaCluster *any
 	if err != nil {
 		return nil, err
 	}
-	// Check to see if there is any change the Kubernetes tag that requires a new template in order to specify the new
+	// Check to see if there is any change in the Kubernetes tag that requires a new template in order to specify the new
 	// node image
 	kubeVersionChanged := existingVersion != bundle.KubeDistro.Kubernetes.Tag
 	var controlPlaneTemplateName string

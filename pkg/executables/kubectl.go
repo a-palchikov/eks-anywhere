@@ -15,7 +15,6 @@ import (
 
 	eksdv1alpha1 "github.com/aws/eks-distro-build-tooling/release/api/v1alpha1"
 	etcdv1 "github.com/mrajashree/etcdadm-controller/api/v1beta1"
-	pkgerrors "github.com/pkg/errors"
 	rufiov1alpha1 "github.com/tinkerbell/rufio/api/v1alpha1"
 	tinkv1alpha1 "github.com/tinkerbell/tink/pkg/apis/core/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
@@ -284,27 +283,7 @@ func (k *Kubectl) DeleteKubeSpecFromBytes(ctx context.Context, cluster *types.Cl
 }
 
 func (k *Kubectl) WaitForClusterReady(ctx context.Context, cluster *types.Cluster, timeout string, clusterName string) error {
-	if err := k.Wait(ctx, cluster.KubeconfigFile, timeout, "Ready", fmt.Sprintf("%s/%s", capiClustersResourceType, clusterName), constants.EksaSystemNamespace); err != nil {
-		return pkgerrors.Wrap(err, "waiting for cluster to become ready")
-	}
-
-	// FIXME(dima)
-	//return k.waitForNodeRefs(clusterName, constants.EksaSystemNamespace, cluster.KubeconfigFile)
-	return nil
-}
-
-func (k *Kubectl) waitForNodeRefs(ctx context.Context, clusterName, namespace, kubeconfigFile string) error {
-	args := []string{
-		"get", fmt.Sprintf("%s/%s", capiClustersResourceType, clusterName),
-		"--kubeconfig", kubeconfigFile,
-		"--namespace", namespace,
-		"--output='jsonpath={.items[*].status.infrastructureReady=true}'",
-	}
-	stdOut, err := k.Execute(ctx, args...)
-	if err != nil {
-		return pkgerrors.Wrapf(err, "waiting for infrastructure to become ready: %s", stdOut.String())
-	}
-	return nil
+	return k.Wait(ctx, cluster.KubeconfigFile, timeout, "Ready", fmt.Sprintf("%s/%s", capiClustersResourceType, clusterName), constants.EksaSystemNamespace)
 }
 
 func (k *Kubectl) WaitForControlPlaneReady(ctx context.Context, cluster *types.Cluster, timeout string, newClusterName string) error {

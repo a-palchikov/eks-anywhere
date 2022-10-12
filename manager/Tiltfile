@@ -100,7 +100,7 @@ manager_binary_dir_in_container = '/home/nonroot'
 
 # Build image for controller manager, trigger when the manager binary changes
 # This uses live_update, so it won't rebuild the whole container image every time
-# the binary changes, just at the begginning
+# the binary changes, just at the beginning.
 # When the binary changes, it updates the running container live, by replacing the binary
 # and restarting the process. This is way faster than building a new image and pushing and pulling
 docker_build_with_restart(

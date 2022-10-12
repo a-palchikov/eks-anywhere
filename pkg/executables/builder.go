@@ -38,7 +38,7 @@ func (b *ExecutablesBuilder) BuildClusterAwsAdmExecutable() *Clusterawsadm {
 }
 
 func (b *ExecutablesBuilder) BuildClusterCtlExecutable(writer filewriter.FileWriter) *Clusterctl {
-	return NewClusterctl(b.executableBuilder.Build(clusterCtlPath), writer)
+	return NewClusterctl(b.executableBuilder.Build(clusterCtlPath, "-v", "10"), writer)
 }
 
 func (b *ExecutablesBuilder) BuildKubectlExecutable() *Kubectl {
